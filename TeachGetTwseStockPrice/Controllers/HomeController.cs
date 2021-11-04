@@ -37,14 +37,19 @@ namespace TeachGetTwseStockPrice.Controllers
         /// </summary>
         /// <param name="inModel"></param>
         /// <returns></returns>
-        [ValidateAntiForgeryToken]
-        public ActionResult GetRealtimePrice(FormIn inModel)
+        public ActionResult GetRealtimePrice(GetRealtimePriceIn inModel)
         {
             GetRealtimePriceOut outModel = new GetRealtimePriceOut();
-            outModel.ErrorMsg = "";
+
+            // 檢查輸入參數
+            if (string.IsNullOrEmpty(inModel.Sample1_Symbol))
+            {
+                outModel.ErrMsg = "請輸入股票代碼";
+                return Json(outModel);
+            }
 
             StringBuilder ExCode = new StringBuilder();
-            string[] symbols = inModel.Q_SYMBOL_1.Split(',');
+            string[] symbols = inModel.Sample1_Symbol.Split(',');
             foreach (string symbol in symbols)
             {
                 ExCode.Append("tse_" + symbol + ".tw|");
@@ -95,11 +100,8 @@ namespace TeachGetTwseStockPrice.Controllers
             }
             outModel.realPrice = sbRealPrice.ToString();
 
-            // 輸出json
-            ContentResult result = new ContentResult();
-            result.ContentType = "application/json";
-            result.Content = JsonConvert.SerializeObject(outModel);
-            return result;
+            // 回傳 Json 給前端
+            return Json(outModel);
         }
 
         /// <summary>
@@ -107,15 +109,20 @@ namespace TeachGetTwseStockPrice.Controllers
         /// </summary>
         /// <param name="inModel"></param>
         /// <returns></returns>
-        [ValidateAntiForgeryToken]
-        public ActionResult GetDayPrice(FormIn inModel)
+        public ActionResult GetDayPrice(GetDayPriceIn inModel)
         {
             GetDayPriceOut outModel = new GetDayPriceOut();
-            outModel.ErrorMsg = "";
+
+            // 檢查輸入參數
+            if (string.IsNullOrEmpty(inModel.Sample2_Date))
+            {
+                outModel.ErrMsg = "請輸入日期";
+                return Json(outModel);
+            }
 
             // 呼叫網址
             string twseUrl = "https://www.twse.com.tw/exchangeReport/MI_INDEX";
-            string download_url = twseUrl + "?response=csv&date=" + inModel.Q_DATE_2 + "&type=ALL";
+            string download_url = twseUrl + "?response=csv&date=" + inModel.Sample2_Date + "&type=ALL";
             string downloadedData = "";
             using (WebClient wClient = new WebClient())
             {
@@ -176,11 +183,8 @@ namespace TeachGetTwseStockPrice.Controllers
                 }
             }
 
-            // 輸出json
-            ContentResult result = new ContentResult();
-            result.ContentType = "application/json";
-            result.Content = JsonConvert.SerializeObject(outModel); ;
-            return result;
+            // 回傳 Json 給前端
+            return Json(outModel);
         }
 
         /// <summary>
@@ -188,14 +192,25 @@ namespace TeachGetTwseStockPrice.Controllers
         /// </summary>
         /// <param name="inModel"></param>
         /// <returns></returns>
-        [ValidateAntiForgeryToken]
-        public ActionResult GetMonthPrice(FormIn inModel)
+        public ActionResult GetMonthPrice(GetMonthPriceIn inModel)
         {
             GetMonthPriceOut outModel = new GetMonthPriceOut();
-            outModel.ErrorMsg = "";
+
+            // 檢查輸入參數
+            if (string.IsNullOrEmpty(inModel.Sample3_Symbol))
+            {
+                outModel.ErrMsg = "請輸入股票代碼";
+                return Json(outModel);
+            }
+
+            if (string.IsNullOrEmpty(inModel.Sample3_Date))
+            {
+                outModel.ErrMsg = "請輸入日期";
+                return Json(outModel);
+            }
 
             // 呼叫網址
-            string download_url = "http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=csv&date=" + inModel.Q_MONTH_3 + "&stockNo=" + inModel.Q_SYMBOL_3;
+            string download_url = "http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=csv&date=" + inModel.Sample3_Date + "&stockNo=" + inModel.Sample3_Symbol;
             string downloadedData = "";
             using (WebClient wClient = new WebClient())
             {
@@ -242,11 +257,9 @@ namespace TeachGetTwseStockPrice.Controllers
 
                 }
             }
-            // 輸出json
-            ContentResult resultJson = new ContentResult();
-            resultJson.ContentType = "application/json";
-            resultJson.Content = JsonConvert.SerializeObject(outModel); ;
-            return resultJson;
+
+            // 回傳 Json 給前端
+            return Json(outModel);
         }
 
         private void ParseCSVData(ArrayList result, string data)

@@ -8,23 +8,55 @@ namespace TeachGetTwseStockPrice.Models
 {
     public class HomeModel
     {
-        public class FormIn
+        /// <summary>
+        /// [即時股價]參數
+        /// </summary>
+        public class GetRealtimePriceIn
         {
-            public string Q_SYMBOL_1 { get; set; }
-            public string Q_DATE_2 { get; set; }
-            public string Q_SYMBOL_3 { get; set; }
-            public string Q_MONTH_3 { get; set; }
+            public string Sample1_Symbol { get; set; }
         }
 
+        /// <summary>
+        /// [即時股價]回傳
+        /// </summary>
         public class GetRealtimePriceOut
         {
-            public string ErrorMsg { get; set; }
+            public string ErrMsg { get; set; }
             public string realPrice { get; set; }
         }
 
+        /// <summary>
+        /// [每日收盤行情]參數
+        /// </summary>
+        public class GetDayPriceIn
+        {
+            public string Sample2_Date { get; set; }
+        }
+
+        /// <summary>
+        /// [每日收盤行情]回傳
+        /// </summary>
         public class GetDayPriceOut
         {
-            public string ErrorMsg { get; set; }
+            public string ErrMsg { get; set; }
+            public List<StockPriceRow> gridList { get; set; }
+        }
+
+        /// <summary>
+        /// [當月各日成交資訊]參數
+        /// </summary>
+        public class GetMonthPriceIn
+        {
+            public string Sample3_Symbol { get; set; }
+            public string Sample3_Date { get; set; }
+        }
+
+        /// <summary>
+        /// [當月各日成交資訊]回傳
+        /// </summary>
+        public class GetMonthPriceOut
+        {
+            public string ErrMsg { get; set; }
             public List<StockPriceRow> gridList { get; set; }
         }
 
@@ -38,12 +70,6 @@ namespace TeachGetTwseStockPrice.Models
             public string low { get; set; }
             public string close { get; set; }
             public string volume { get; set; }
-        }
-
-        public class GetMonthPriceOut
-        {
-            public string ErrorMsg { get; set; }
-            public List<StockPriceRow> gridList { get; set; }
         }
 
         public class TwsePriceSchema
