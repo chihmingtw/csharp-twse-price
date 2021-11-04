@@ -144,6 +144,11 @@
                     dataType:'json',
                     data: { inModel: postData},
                     success: function (datas) {
+                        if (datas.ErrMsg) {
+                            alert(datas.ErrMsg);
+                            return;
+                        }
+
                         self.realPrice = datas.realPrice;
 
                         // 解除畫面鎖定
@@ -166,6 +171,11 @@
                     dataType:'json',
                     data: { inModel: postData },
                     success: function (datas) {
+                        if (datas.ErrMsg) {
+                            alert(datas.ErrMsg);
+                            return;
+                        }
+
                         self.gridDay = [];
                         // 顯示列表
                         for (var i in datas.gridList) {
@@ -197,6 +207,11 @@
                     dataType:'json',
                     data: { inModel: postData },
                     success: function (datas) {
+                        if (datas.ErrMsg) {
+                            alert(datas.ErrMsg);
+                            return;
+                        }
+
                         self.gridMonthPirce = [];
                         // 顯示列表
                         for (var i in datas.gridList) {
